@@ -5,7 +5,8 @@ image:
 # Build script
 build_script:
   - ps: ./build.ps1
-  - sh: ./build.sh
+  - sh: ./build.sh -t BuildAndTest
+
 # Tests
 test: off
 

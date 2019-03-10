@@ -296,6 +296,15 @@ Task("Build")
     .IsDependentOn("__StronglySignAssemblies")
     .IsDependentOn("__CreateSignedNugetPackage");
 
+Task("BuildAndTest")
+    .IsDependentOn("__Clean")
+    .IsDependentOn("__RestoreNugetPackages")
+    .IsDependentOn("__UpdateAssemblyVersionInformation")
+    .IsDependentOn("__UpdateDotNetStandardAssemblyVersionNumber")
+    .IsDependentOn("__UpdateAppVeyorBuildNumber")
+    .IsDependentOn("__BuildSolutions")
+    .IsDependentOn("__RunTests");
+
 ///////////////////////////////////////////////////////////////////////////////
 // PRIMARY TARGETS
 ///////////////////////////////////////////////////////////////////////////////
