@@ -1,0 +1,17 @@
+image:
+  - Visual Studio 2017
+  - ubuntu
+
+# Build script
+build_script:
+  - ps: ./build.ps1
+  - sh: ./build.sh
+# Tests
+test: off
+
+artifacts:
+  - path: artifacts/nuget-package/*.nupkg
+
+environment:
+  # Skip dotnet package caching on build servers
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
