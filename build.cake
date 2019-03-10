@@ -301,7 +301,7 @@ Task("BuildAndTest")
     .IsDependentOn("__RestoreNugetPackages")
     .IsDependentOn("__UpdateAssemblyVersionInformation")
     .IsDependentOn("__UpdateDotNetStandardAssemblyVersionNumber")
-    .IsDependentOn("__UpdateAppVeyorBuildNumber")
+    // .IsDependentOn("__UpdateAppVeyorBuildNumber") fails on appveyor
     .IsDependentOn("__BuildSolutions")
     .IsDependentOn("__RunTests");
 
