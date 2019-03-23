@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Polly.Contrib.RateLimiting /* Use a namespace broadly describing the topic, eg Polly.Contrib.Logging, Polly.Contrib.RateLimiting */
 {
-    internal static class AsyncProactiveFooEngine
+    internal static class AsyncTokenBucketEngine
     {
         internal static async Task<TResult> ImplementationAsync<TResult>(
             Func<Context, CancellationToken, Task<TResult>> action, // The delegate the user passed to execute

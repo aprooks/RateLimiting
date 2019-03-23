@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Polly.Contrib.RateLimiting.Specs
 {
-    public class ProactiveFooPolicySpecs
+    public class TokenBucketSpecs
     {
         [Fact]
         public void ReplaceMeWithRealTests()
@@ -12,17 +13,17 @@ namespace Polly.Contrib.RateLimiting.Specs
              * This test is for illustrative purposes, to show the interfaces a typical synchronous non-generic policy fulfills.
              * Real tests should check policy behaviour.
              */
-            ProactiveFooPolicy policy = ProactiveFooPolicy.Create();
+            var policy = TokenBucket.Create(50, TimeSpan.FromMinutes(1), 2);
 
             policy.Should().BeAssignableTo<ISyncPolicy>();
-            policy.Should().BeAssignableTo<IProactiveFooPolicy>();
+            policy.Should().BeAssignableTo<ITokenBucket>();
         }
 
         [Fact]
         public void PolicyExecutesThePassedDelegate()
         {
             bool executed = false;
-            ProactiveFooPolicy policy = ProactiveFooPolicy.Create();
+            var policy = TokenBucket.Create(50, TimeSpan.FromMinutes(1), 2);
 
             policy.Execute(() => executed = true);
 

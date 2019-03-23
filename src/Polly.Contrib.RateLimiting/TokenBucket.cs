@@ -6,9 +6,14 @@ namespace Polly.Contrib.RateLimiting /* Use a namespace broadly describing the t
     /// <summary>
     /// A ProactiveFoo policy that can be applied to delegates.
     /// </summary>
-    public class ProactiveFooPolicy : Policy, IProactiveFooPolicy
+    public class TokenBucket : Policy, ITokenBucket
     {
-        /* This is the non-generic ProactiveFooPolicy for synchronous executions.
+        private readonly int _tokens;
+
+        private readonly TimeSpan _timeWindow;
+
+        private readonly int _returnTokens;
+        /* This is the non-generic TokenBucket for synchronous executions.
          * With this policy, users can execute void-returning Actions, using .Execute(...),
          * or TResult-returning Func<>s, using the generic base-class _method_ .Execute<TResult>(...).
          * So, although the policy is non-generic, the Implementation<TResult>(...) method is generic in TResult.
@@ -17,19 +22,24 @@ namespace Polly.Contrib.RateLimiting /* Use a namespace broadly describing the t
         /* It is a syntax convention for proactive Polly policies to use static creation methods rather than use constructors directly. It makes the syntax more similar to reactive policy syntax. */
 
         /// <summary>
-        /// Constructs a new instance of <see cref="ProactiveFooPolicy"/>.
+        /// Constructs a new instance of <see cref="TokenBucket"/>.
         /// </summary>
-        /// <returns><see cref="ProactiveFooPolicy"/></returns>
-        public static ProactiveFooPolicy Create(
+        /// <returns><see cref="TokenBucket"/></returns>
+        public static TokenBucket Create(
             /* If configuration should be passed when creating the policy, pass it here ... */
+            int tokens, TimeSpan timeWindow, int returnTokens
             )
         {
-            return new ProactiveFooPolicy(/* ... and pass it on to the constructor ... */);
+            return new TokenBucket(tokens, timeWindow, returnTokens);
         }
 
-        internal ProactiveFooPolicy(/* configuration parameters */)
+        internal TokenBucket(/* configuration parameters */
+            int tokens, TimeSpan timeWindow, int returnTokens
+            )
         {
-            /* ... and the policy constructor can store configuration, for the implementation to use. */
+            _tokens = tokens;
+            _timeWindow = timeWindow;
+            _returnTokens = returnTokens;
         }
 
         /// <inheritdoc/>
@@ -37,14 +47,15 @@ namespace Polly.Contrib.RateLimiting /* Use a namespace broadly describing the t
         {
             /* This method is intentionally a pass-through.
              Delegating to ProactiveFooEngine.Implementation<TResult>(...) allows the code to use that single synchronous implementation
-             for both ProactiveFooPolicy and ProactiveFooPolicy<TResult>
+             for both TokenBucket and TokenBucket<TResult>
              */
-            return ProactiveFooEngine.Implementation(
+            return TokenBucketEngine.Implementation(
                 action,
                 context,
-                cancellationToken
-                /* The implementation should receive at least the above parameters,
-                 * but more parameters can also be passed: eg anything the policy was configured with. */
+                cancellationToken,
+                _tokens,
+                _timeWindow,
+                _returnTokens
                 );
         }
     }

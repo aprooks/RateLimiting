@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Polly.Contrib.RateLimiting.Specs
 {
-    public class ProactiveFooPolicyTResultSpecs
+    public class TokenBucketTResultSpecs
     {
         [Fact]
         public void ReplaceMeWithRealTests()
@@ -13,17 +13,17 @@ namespace Polly.Contrib.RateLimiting.Specs
              * Real tests should check policy behaviour.
              */
 
-            ProactiveFooPolicy<int> policy = ProactiveFooPolicy<int>.Create();
+            TokenBucketPolicy<int> policy = TokenBucketPolicy<int>.Create();
 
             policy.Should().BeAssignableTo<ISyncPolicy<int>>();
-            policy.Should().BeAssignableTo<IProactiveFooPolicy<int>>();
+            policy.Should().BeAssignableTo<ITokenBucket<int>>();
         }
 
         [Fact]
         public void PolicyExecutesThePassedDelegate()
         {
             bool executed = false;
-            ProactiveFooPolicy<int> policy = ProactiveFooPolicy<int>.Create();
+            TokenBucketPolicy<int> policy = TokenBucketPolicy<int>.Create();
 
             policy.Execute(() =>
             {

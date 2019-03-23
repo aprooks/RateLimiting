@@ -7,9 +7,9 @@ namespace Polly.Contrib.RateLimiting /* Use a namespace broadly describing the t
     /// <summary>
     /// A ProactiveFoo policy that can be applied to asynchronous delegates.
     /// </summary>
-    public class AsyncProactiveFooPolicy : AsyncPolicy, IProactiveFooPolicy
+    public class AsyncTokenBucket : AsyncPolicy, ITokenBucket
     {
-        /* This is the non-generic ProactiveFooPolicy for asynchronous executions.
+        /* This is the non-generic TokenBucket for asynchronous executions.
          * With this policy, users can asynchronously execute Task-returning methods, using .ExecuteAsync(...),
          * or TResult-returning Func<Task<TResult>>s, using the generic base-class _method_ .ExecuteAsync<TResult>(...).
          * So, although the policy is non-generic, the Implementation<AsyncTResult>(...) method is generic in TResult.
@@ -18,17 +18,17 @@ namespace Polly.Contrib.RateLimiting /* Use a namespace broadly describing the t
         /* It is a syntax convention for proactive Polly policies to use static creation methods rather than use constructors directly. It makes the syntax more similar to reactive policy syntax. */
 
         /// <summary>
-        /// Constructs a new instance of <see cref="AsyncProactiveFooPolicy"/>.
+        /// Constructs a new instance of <see cref="AsyncTokenBucket"/>.
         /// </summary>
-        /// <returns><see cref="AsyncProactiveFooPolicy"/></returns>
-        public static AsyncProactiveFooPolicy Create(
+        /// <returns><see cref="AsyncTokenBucket"/></returns>
+        public static AsyncTokenBucket Create(
             /* If configuration should be passed when creating the policy, pass it here ... */
             )
         {
-            return new AsyncProactiveFooPolicy(/* ... and pass it on to the constructor ... */);
+            return new AsyncTokenBucket(/* ... and pass it on to the constructor ... */);
         }
 
-        internal AsyncProactiveFooPolicy(/* configuration parameters */)
+        internal AsyncTokenBucket(/* configuration parameters */)
         {
             /* ... and the policy constructor can store configuration, for the implementation to use. */
         }
@@ -39,9 +39,9 @@ namespace Polly.Contrib.RateLimiting /* Use a namespace broadly describing the t
         {
             /* This method is intentionally a pass-through.
              Delegating to AsyncProactiveFooEngine.ImplementationAsync<TResult>(...) allows the code to use that single asynchronous implementation
-             for both AsyncProactiveFooPolicy and AsyncProactiveFooPolicy<TResult>
+             for both AsyncTokenBucket and AsyncTokenBucket<TResult>
              */
-            return AsyncProactiveFooEngine.ImplementationAsync(
+            return AsyncTokenBucketEngine.ImplementationAsync(
                 action,
                 context,
                 cancellationToken,

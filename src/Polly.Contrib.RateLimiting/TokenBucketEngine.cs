@@ -3,14 +3,15 @@ using System.Threading;
 
 namespace Polly.Contrib.RateLimiting /* Suggested pattern: Use a namespace broadly describing the topic, eg Polly.Contrib.Logging, Polly.Contrib.RateLimiting */
 {
-    internal static class ProactiveFooEngine
+    internal static class TokenBucketEngine
     {
         internal static TResult Implementation<TResult>(
             Func<Context, CancellationToken, TResult> action, // The delegate the user passed to execute
             Context context, // The context the user passed to execute (never null; Polly provides one if user does not)
-            CancellationToken cancellationToken // The cancellation token the user passed to execute; for co-operative cancellation to be effective, policy implementations should honour it at suitable points in the execution.
-            /* The implementation should receive at least the above parameters,
-             * but more parameters can also be passed: eg anything the policy was configured with. */
+            CancellationToken cancellationToken, // The cancellation token the user passed to execute; for co-operative cancellation to be effective, policy implementations should honour it at suitable points in the execution.
+            int tokens,
+            TimeSpan timeWindow,
+            int returnTokens
             )
         {
             /*
@@ -39,6 +40,18 @@ namespace Polly.Contrib.RateLimiting /* Suggested pattern: Use a namespace broad
 
             TResult result = action(context, cancellationToken);
 
+            /*
+             * on create init window as Now
+             *
+             * If op is in window (Now is in WindowStart+ timespan), remove token
+             * If tokens below zero, throw exception
+             * If op is outside of window,
+             *     calculate how many windows W passed,
+             *     add W * returnTokens maxed to tokens to current window
+             *     init CurrentWindow with Now
+             *     remove token
+             *
+             */
 
             return result;
         }

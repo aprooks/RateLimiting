@@ -4,31 +4,31 @@ using Xunit;
 
 namespace Polly.Contrib.RateLimiting.Specs
 {
-    public class AsyncProactiveFooPolicySpecs
+    public class AsyncTokenBucketTResultSpecs
     {
         [Fact]
         public void ReplaceMeWithRealTests()
         {
             /*
-             * This test is for illustrative purposes, to show the interfaces a typical asynchronous non-generic policy fulfills.
+             * This test is for illustrative purposes, to show the interfaces a typical asynchronous generic policy fulfills.
              * Real tests should check policy behaviour.
              */
-            AsyncProactiveFooPolicy policy = AsyncProactiveFooPolicy.Create();
+            AsyncTokenBucket<int> policy = AsyncTokenBucket<int>.Create();
 
-            policy.Should().BeAssignableTo<IAsyncPolicy>();
-            policy.Should().BeAssignableTo<IProactiveFooPolicy>();
+            policy.Should().BeAssignableTo<IAsyncPolicy<int>>();
+            policy.Should().BeAssignableTo<ITokenBucket<int>>();
         }
 
         [Fact]
         public async Task PolicyExecutesThePassedDelegate()
         {
             bool executed = false;
-            AsyncProactiveFooPolicy policy = AsyncProactiveFooPolicy.Create();
+            AsyncTokenBucket<int> policy = AsyncTokenBucket<int>.Create();
 
             await policy.ExecuteAsync(() =>
             {
                 executed = true;
-                return Task.CompletedTask;
+                return Task.FromResult(0);
             });
 
             executed.Should().BeTrue();
